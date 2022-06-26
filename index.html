@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Plugin #02</title>
+        <link rel="stylesheet" href="css/temporizador.css" />
+        <script src="js/jquery.js"></script>
+    </head>
+
+    <body>
+        <h1>Plugin - Temporizador</h1>
+
+        <div>
+            <p id="demo"></p>
+        </div>
+        <h3>Feito no CursoWebModerno</h3>
+        <script src="js/temporizador.js"></script>
+        <script>
+            //Os parametros ficam dentro do objeto
+            //Escolha a hora até que chegue
+            $('div')
+                .temporizador({
+                    mensagem: '...horas para a semana acabar!'
+                    // horario: '18:00:00'
+                })
+                .hide()
+                .fadeIn(3000)
+
+            //================================
+            function dataDiaDaSemana(diaRef) {
+                let dias = {
+                    segunda: 1,
+                    terca: 2,
+                    quarta: 3,
+                    quinta: 4,
+                    sexta: 5,
+                    sabado: 6,
+                    domingo: 0
+                }
+
+                let dataAtual = new Date()
+                let timestampAtual = dataAtual.getTime()
+                let diaGatilho = dias[diaRef]
+                let diaMilisegDif = 0
+                let diaEmMiliseg = 1000 * 60 * 60 * 24
+                // adiciona um dia a diaMilisegDif enquanto o diaRef desejado (segunda por exemplo) não for atingido
+                while (dataAtual.getDay() != diaGatilho) {
+                    diaMilisegDif += diaEmMiliseg
+                    dataAtual = new Date(dataAtual.getTime() + diaEmMiliseg)
+                }
+                return new Date(timestampAtual + diaMilisegDif)
+            }
+
+            //defina o dia destino da semana
+            let dia = dataDiaDaSemana('segunda')
+            //defina o horario
+            dia.setHours(0, 0, 0, 0) //(hora, min, seg, miliseg)
+
+            //fonte https://www.w3schools.com/howto/howto_js_countdown.asp
+
+            //define a data para contagem regressiva
+            let countDownDate = new Date(dia).getTime()
+
+            // Update the count down every 1 second
+            let x = setInterval(function () {
+                // Get todays date and time
+                let now = new Date().getTime()
+
+                // Find the distance between now and the count down date
+                let distance = countDownDate - now
+
+                // Time calculations for days, hours, minutes and seconds
+                let days = Math.floor(distance / (1000 * 60 * 60 * 24))
+                let hours = Math.floor(
+                    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                )
+                let minutes = Math.floor(
+                    (distance % (1000 * 60 * 60)) / (1000 * 60)
+                )
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+                if (distance < 1) {
+                    // você chegou ao seu destino :-)
+                    document.getElementById('demo').innerHTML = ''
+                    /*** redefine a data para próximo dia destino da semana *****/
+                    countDownDate = new Date(
+                        countDownDate.valueOf() + 604800000
+                    )
+                } else if (days > 0) {
+                    document.getElementById('demo').innerHTML = `Restam apenas 
+                        ${days}dias e...`
+                } else {
+                    document.getElementById(
+                        'demo'
+                    ).innerHTML = `Restam apenas...`
+                }
+            })
+                .hide()
+                .fadeIn(3000)
+        </script>
+    </body>
+</html>
